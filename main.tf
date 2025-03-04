@@ -87,12 +87,12 @@ module "dataflow-job" {
   #version = "0.1.0"
 
   project_id            = var.project_id
-  name                  = "getting-started-terraform-example"
+  name                  = "pub-sub-to-bigquery-example-part2"
   on_delete             = "cancel"
   region                = var.region
   max_workers           = 1
   #template_gcs_path     = "gs://dataflow-templates/latest/Word_Count"
-  container_spec_gcs_path    = "gs://dataflow-repo-bucket/getting_started-java.json"
+  container_spec_gcs_path    = "gs://dataflow-templates-us-central1/latest/flex/PubSub_to_BigQuery_Flex"
   #temp_gcs_location     = module.bucket.name
   temp_location     = "gs://${module.bucket.name}/tmp_dir"
   service_account_email = var.service_account_email
@@ -101,8 +101,8 @@ module "dataflow-job" {
   machine_type          = "n1-standard-1"
 
   parameters = {
-   # inputFile = "gs://dataflow-samples/shakespeare/kinglear.txt"
-    output    = "gs://${local.gcs_bucket_name}/output/my_output"
+    inputTopic = "projects/cloud-appcenter-e2e-testing/topics/biq-query-testing"
+    outputTableSpec = "cloud-appcenter-e2e-testing:tutorial_dataset.tutorial"
   }
 }
 

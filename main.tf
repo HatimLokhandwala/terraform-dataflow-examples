@@ -87,12 +87,13 @@ module "dataflow-job" {
   #version = "0.1.0"
 
   project_id            = var.project_id
-  name                  = "pub-sub-to-bigquery-example-part2"
+  name                  = "bigquery-to-bigtable-example"
   on_delete             = "cancel"
   region                = var.region
   max_workers           = 1
   #template_gcs_path     = "gs://dataflow-templates/latest/Word_Count"
-  container_spec_gcs_path    = "gs://dataflow-templates-us-central1/latest/flex/PubSub_to_BigQuery_Flex"
+  
+  container_spec_gcs_path    = "gs://dataflow-templates-us-central1/latest/flex/BigQuery_to_Bigtable"
   #temp_gcs_location     = module.bucket.name
   temp_location     = "gs://${module.bucket.name}/tmp_dir"
   service_account_email = var.service_account_email
@@ -101,8 +102,12 @@ module "dataflow-job" {
   machine_type          = "n1-standard-1"
 
   parameters = {
-    inputTopic = "projects/cloud-appcenter-e2e-testing/topics/biq-query-testing"
-    outputTableSpec = "cloud-appcenter-e2e-testing:tutorial_dataset.tutorial"
+    inputTableSpec = "cloud-appcenter-e2e-testing:bigtable_test.tutorial"
+    readIdColumn = "id"
+    bigtableWriteTableId = "test"
+    bigtableWriteInstanceId = "dataflow-bigtable"
+    bigtableWriteProjectId = var.project_id
+    bigtableWriteColumnFamily = "sample"
   }
 }
 

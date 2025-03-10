@@ -30,11 +30,11 @@ module "vpc" {
   source       = "terraform-google-modules/network/google"
   version      = "~> 10.0"
   project_id   = var.project_id
-  network_name = "dataflow-network"
+  network_name = "dataflow-network-part2"
 
   subnets = [
     {
-      subnet_name   = "dataflow-subnetwork"
+      subnet_name   = "dataflow-subnetwork-part2"
       subnet_ip     = "10.1.3.0/24"
       subnet_region = "us-central1"
       subnet_private_access = "true"
@@ -87,13 +87,13 @@ module "dataflow-job" {
   #version = "0.1.0"
 
   project_id            = var.project_id
-  name                  = "bigquery-to-bigtable-example"
+  name                  = "pubsub-to-bigquery-update-testing"
   on_delete             = "cancel"
   region                = var.region
   max_workers           = 1
   #template_gcs_path     = "gs://dataflow-templates/latest/Word_Count"
   
-  container_spec_gcs_path    = "gs://dataflow-templates-us-central1/latest/flex/BigQuery_to_Bigtable"
+  container_spec_gcs_path    = "gs://template-pubsub-bq-testing-mod/images/2025_03_09_01/flex/PubSub_to_BigQuery_Flex"
   #temp_gcs_location     = module.bucket.name
   temp_location     = "gs://${module.bucket.name}/tmp_dir"
   service_account_email = var.service_account_email
@@ -102,12 +102,8 @@ module "dataflow-job" {
   machine_type          = "n1-standard-1"
 
   parameters = {
-    inputTableSpec = "cloud-appcenter-e2e-testing:bigtable_test.tutorial"
-    readIdColumn = "id"
-    bigtableWriteTableId = "test"
-    bigtableWriteInstanceId = "dataflow-bigtable"
-    bigtableWriteProjectId = var.project_id
-    bigtableWriteColumnFamily = "sample"
+    outputTableSpec = "cloud-appcenter-e2e-testing:pubsub_test.tutorial"
+    module_name_xyz_InputTopic = "projects/cloud-appcenter-e2e-testing/topics/biq-query-update-testing"
   }
 }
 

@@ -87,13 +87,13 @@ module "dataflow-job" {
   #version = "0.1.0"
 
   project_id            = var.project_id
-  name                  = "pubsub-to-bigquery-update-testing"
+  name                  = "pubsub-to-gcs-update-testing"
   on_delete             = "cancel"
   region                = var.region
   max_workers           = 1
   #template_gcs_path     = "gs://dataflow-templates/latest/Word_Count"
   
-  container_spec_gcs_path    = "gs://template-pubsub-bq-testing-mod/images/2025_03_09_01/flex/PubSub_to_BigQuery_Flex"
+  container_spec_gcs_path    = "gs://template-pubsub-to-gcs/images/2025_03_10_01/flex/Cloud_PubSub_to_GCS_Text_Flex"
   #temp_gcs_location     = module.bucket.name
   temp_location     = "gs://${module.bucket.name}/tmp_dir"
   service_account_email = var.service_account_email
@@ -102,8 +102,9 @@ module "dataflow-job" {
   machine_type          = "n1-standard-1"
 
   parameters = {
-    outputTableSpec = "cloud-appcenter-e2e-testing:pubsub_test.tutorial"
-    module_name_xyz_InputTopic = "projects/cloud-appcenter-e2e-testing/topics/biq-query-update-testing"
+    pub_sub_1_InputTopic = "projects/cloud-appcenter-e2e-testing/topics/gcs-update-testing"
+    cloud_storage_1_OutputDirectory = "gs://pubsub-gcs-write-testing/data/"
+    cloud_storage_1_OutputFilenamePrefix = "testing-"
   }
 }
 
